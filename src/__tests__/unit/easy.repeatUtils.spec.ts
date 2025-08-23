@@ -72,6 +72,17 @@ describe('generateRepeatDates - 매월 반복', () => {
 
     expect(result).toEqual(['2025-10-15']);
   });
+
+  it('31일 매월 반복 - 31일이 없는 달은 건너뛴다', () => {
+    const startDate = '2025-01-31';
+    const repeatType = 'monthly';
+    const interval = 1;
+    const endDate = '2025-06-30';
+
+    const result = generateRepeatDates(startDate, repeatType, interval, endDate);
+
+    expect(result).toEqual(['2025-01-31', '2025-03-31', '2025-05-31']);
+  });
 });
 
 describe('generateRepeatDates - 매년 반복', () => {
@@ -95,5 +106,16 @@ describe('generateRepeatDates - 매년 반복', () => {
     const result = generateRepeatDates(startDate, repeatType, interval, endDate);
 
     expect(result).toEqual(['2025-10-15']);
+  });
+
+  it('윤년 29일 매년 반복 - 29일이 없는 해는 건너뛴다', () => {
+    const startDate = '2024-02-29';
+    const repeatType = 'yearly';
+    const interval = 1;
+    const endDate = '2030-12-31';
+
+    const result = generateRepeatDates(startDate, repeatType, interval, endDate);
+
+    expect(result).toEqual(['2024-02-29', '2028-02-29']);
   });
 });
