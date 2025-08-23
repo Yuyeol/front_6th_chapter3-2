@@ -16,6 +16,8 @@ export const generateRepeatDates = (
       start.setDate(start.getDate() + 7 * interval);
     } else if (repeatType === 'monthly') {
       start.setMonth(start.getMonth() + interval);
+    } else if (repeatType === 'yearly') {
+      start.setFullYear(start.getFullYear() + interval);
     }
   }
 
