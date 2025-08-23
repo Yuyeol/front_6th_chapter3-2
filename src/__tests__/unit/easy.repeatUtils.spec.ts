@@ -52,23 +52,43 @@ describe('generateRepeatDates - 매주 반복', () => {
 
 describe('generateRepeatDates - 매월 반복', () => {
   it('매월 반복으로 3개월간 날짜를 생성한다', () => {
-    const startDate = '2025-10-15'; // 10월 15일
+    const startDate = '2025-10-15';
     const repeatType = 'monthly';
     const interval = 1;
     const endDate = '2025-12-31';
 
     const result = generateRepeatDates(startDate, repeatType, interval, endDate);
 
-    expect(result).toEqual([
-      '2025-10-15', // 10월 15일
-      '2025-11-15', // 11월 15일
-      '2025-12-15', // 12월 15일
-    ]);
+    expect(result).toEqual(['2025-10-15', '2025-11-15', '2025-12-15']);
   });
 
   it('매월 반복으로 1개월간 날짜를 생성한다 (시작일과 종료일이 같은 경우)', () => {
     const startDate = '2025-10-15';
     const repeatType = 'monthly';
+    const interval = 1;
+    const endDate = '2025-10-15';
+
+    const result = generateRepeatDates(startDate, repeatType, interval, endDate);
+
+    expect(result).toEqual(['2025-10-15']);
+  });
+});
+
+describe('generateRepeatDates - 매년 반복', () => {
+  it('매년 반복으로 3년간 날짜를 생성한다', () => {
+    const startDate = '2025-10-15';
+    const repeatType = 'yearly';
+    const interval = 1;
+    const endDate = '2027-12-31';
+
+    const result = generateRepeatDates(startDate, repeatType, interval, endDate);
+
+    expect(result).toEqual(['2025-10-15', '2026-10-15', '2027-10-15']);
+  });
+
+  it('매년 반복으로 1년간 날짜를 생성한다 (시작일과 종료일이 같은 경우)', () => {
+    const startDate = '2025-10-15';
+    const repeatType = 'yearly';
     const interval = 1;
     const endDate = '2025-10-15';
 
