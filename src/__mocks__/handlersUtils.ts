@@ -20,6 +20,24 @@ export const setupMockHandlerCreation = (initEvents = [] as Event[]) => {
   );
 };
 
+export const setupMockHandlerCreationList = (initEvents = [] as Event[]) => {
+  const mockEvents: Event[] = [...initEvents];
+
+  server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.json({ events: mockEvents });
+    }),
+    http.post('/api/events-list', async ({ request }) => {
+      const { events: newEvents } = (await request.json()) as { events: Event[] };
+      newEvents.forEach((ev) => {
+        ev.id = String(mockEvents.length + 1);
+        mockEvents.push(ev);
+      });
+      return HttpResponse.json(newEvents, { status: 201 });
+    })
+  );
+};
+
 export const setupMockHandlerUpdating = () => {
   const mockEvents: Event[] = [
     {
