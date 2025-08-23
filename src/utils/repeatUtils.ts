@@ -14,6 +14,8 @@ export const generateRepeatDates = (
       start.setDate(start.getDate() + interval);
     } else if (repeatType === 'weekly') {
       start.setDate(start.getDate() + 7 * interval);
+    } else if (repeatType === 'monthly') {
+      start.setMonth(start.getMonth() + interval);
     }
   }
 
