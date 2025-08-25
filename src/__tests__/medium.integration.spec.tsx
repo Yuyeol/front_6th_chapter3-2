@@ -250,6 +250,33 @@ describe('일정 뷰', () => {
     expect(weekView.getByText('이번주 팀 회의')).toBeInTheDocument();
   });
 
+  it('주별 뷰에서 반복 일정에는 반복 아이콘이 표시된다', async () => {
+    setupMockHandlerCreationList();
+
+    const { user } = setup(<App />);
+    await saveSchedule(user, {
+      title: '주간 가족 회의',
+      date: '2025-10-02',
+      startTime: '10:00',
+      endTime: '11:00',
+      description: '매주 진행되는 가족 회의',
+      location: '회의실 C',
+      category: '가족',
+      repeat: {
+        type: 'weekly',
+        interval: 1,
+        endDate: '2025-10-30',
+      },
+    });
+
+    await user.click(within(screen.getByLabelText('뷰 타입 선택')).getByRole('combobox'));
+    await user.click(screen.getByRole('option', { name: 'week-option' }));
+
+    const weekView = within(screen.getByTestId('week-view'));
+    expect(weekView.getAllByText('주간 가족 회의')).toHaveLength(1);
+    expect(weekView.getAllByTestId('RepeatIcon')).toHaveLength(1);
+  });
+
   it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {
     vi.setSystemTime(new Date('2025-01-01'));
 
@@ -278,6 +305,30 @@ describe('일정 뷰', () => {
 
     const monthView = within(screen.getByTestId('month-view'));
     expect(monthView.getByText('이번달 팀 회의')).toBeInTheDocument();
+  });
+
+  it('월별 뷰에서 반복 일정에는 반복 아이콘이 표시된다', async () => {
+    setupMockHandlerCreationList();
+
+    const { user } = setup(<App />);
+    await saveSchedule(user, {
+      title: '주간 가족 회의',
+      date: '2025-10-15',
+      startTime: '10:00',
+      endTime: '11:00',
+      description: '매주 진행되는 가족 회의',
+      location: '회의실 C',
+      category: '가족',
+      repeat: {
+        type: 'weekly',
+        interval: 1,
+        endDate: '2025-10-30',
+      },
+    });
+
+    const monthView = within(screen.getByTestId('month-view'));
+    expect(monthView.getAllByText('주간 가족 회의')).toHaveLength(3);
+    expect(monthView.getAllByTestId('RepeatIcon')).toHaveLength(3);
   });
 
   it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {
