@@ -123,7 +123,7 @@ describe('일정 CRUD 및 기본 기능', () => {
       repeat: {
         type: 'weekly',
         interval: 1,
-        endDate: '2025-10-31',
+        endDate: '2025-10-30',
       },
     });
 
@@ -164,19 +164,54 @@ describe('일정 CRUD 및 기본 기능', () => {
     expect(eventList.getByText('회의 내용 변경')).toBeInTheDocument();
   });
 
-  it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {
-    setupMockHandlerDeletion();
+  it('반복으로 생성된 일정 중 하나만 수정해도 나머지는 영향받지 않는다', async () => {
+    setupMockHandlerUpdating({ isRepeat: true });
 
     const { user } = setup(<App />);
+
     const eventList = within(screen.getByTestId('event-list'));
-    expect(await eventList.findByText('삭제할 이벤트')).toBeInTheDocument();
+    expect(await eventList.findAllByText('주간 가족 회의')).toHaveLength(3);
 
-    // 삭제 버튼 클릭
-    const allDeleteButton = await screen.findAllByLabelText('Delete event');
-    await user.click(allDeleteButton[0]);
+    const editButtons = await screen.findAllByLabelText('Edit event');
+    await user.click(editButtons[0]);
 
-    expect(eventList.queryByText('삭제할 이벤트')).not.toBeInTheDocument();
+    // 제목만 수정
+    await user.clear(screen.getByLabelText('제목'));
+    await user.type(screen.getByLabelText('제목'), '수정된 가족 회의');
+
+    await user.click(screen.getByTestId('event-submit-button'));
+
+    expect(eventList.getByText('수정된 가족 회의')).toBeInTheDocument();
+    expect(eventList.getAllByText('주간 가족 회의')).toHaveLength(2);
   });
+});
+
+it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {
+  setupMockHandlerDeletion();
+
+  const { user } = setup(<App />);
+  const eventList = within(screen.getByTestId('event-list'));
+  expect(await eventList.findByText('삭제할 이벤트')).toBeInTheDocument();
+
+  // 삭제 버튼 클릭
+  const allDeleteButton = await screen.findAllByLabelText('Delete event');
+  await user.click(allDeleteButton[0]);
+
+  expect(eventList.queryByText('삭제할 이벤트')).not.toBeInTheDocument();
+});
+
+it('반복으로 생성된 일정 중 하나만 삭제해도 나머지는 영향받지 않는다', async () => {
+  setupMockHandlerDeletion({ isRepeat: true });
+
+  const { user } = setup(<App />);
+  const eventList = within(screen.getByTestId('event-list'));
+
+  expect(await eventList.findAllByText('주간 가족 회의')).toHaveLength(3);
+
+  const deleteButtons = await screen.findAllByLabelText('Delete event');
+  await user.click(deleteButtons[0]);
+
+  expect(eventList.getAllByText('주간 가족 회의')).toHaveLength(2);
 });
 
 describe('일정 뷰', () => {
