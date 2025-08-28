@@ -31,11 +31,18 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+    },
   ],
 
-  // Automatically start Vite dev server before running the test suite
   webServer: {
-    command: 'pnpm start',
+    command: 'pnpm dev',
     port: 5173,
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,

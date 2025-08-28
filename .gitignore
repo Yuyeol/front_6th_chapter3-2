@@ -2,8 +2,4 @@
 .vscode
 node_modules
 .coverage
-test-results/.last-run.json
-test-results/single-event-crud-단일-일정-CRUD-새-일정을-추가하고-목록에서-확인한다-chromium/error-context.md
-test-results/single-event-crud-단일-일정-CRUD-새-일정을-추가하고-목록에서-확인한다-chromium/test-failed-1.png
-test-results/single-event-crud-단일-일정-CRUD-새-일정을-추가하고-목록에서-확인한다-chromium/trace.zip
-test-results/single-event-crud-단일-일정-CRUD-새-일정을-추가하고-목록에서-확인한다-chromium/video.webm
+test-results/*
